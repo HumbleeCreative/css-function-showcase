@@ -1,0 +1,78 @@
+/* ===== Experimenting with CSS Functions =====
+
+I've been exploring the new CSS Functions and Mixins module. Which from what I can see, it will be a complete game-changer for how we can handle responsiveness in CSS in the future.
+
+Instead of writing the same @media queries over and over, I have built this '--responsive' function to handle it all in one go.
+
+Benefits of CSS Functions:
+
+1. It applies the DRY (Don't Repeat Yourself) principle and eliminates multiple @media blocks throughout the stylesheet.
+
+2. It helps to Keep responsive values and variations of a property grouped together for better readability.
+
+3. By using default values you can set up intelligent fallbacks to 'cascade' values up if specific breakpoints are not defined.
+
+This is still in the experimental phase and not all browsers support it. From my research, as of January 2026, I have found that currently, this only works in Chromium-based browsers. There is no native support yet for Firefox or Safari
+
+This is a major step forward allowing us to create custom functions in CSS!
+
+My research sources:
+- https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@function
+- https://drafts.csswg.org/css-mixins-1/#function-rule
+- Current Browser Support: https://caniuse.com/mdn-css_at-rules_function_result
+*/
+
+/* ===== Here is my example =====
+I have written a basic '--responsive' function which allows you to use one line of code to target 3 breakpoints, it keeps all of the values grouped nicely together in one css block. */
+
+@function --responsive(
+  --mobile,
+  --tablet: var(--mobile),
+  --desktop: var(--tablet)
+) {
+  /* Start with the Desktop view as our base */
+  result: var(--desktop);
+
+  /* Conditional Overrides for smaller screens */
+  /* Adjust for Tablets */
+  @media (max-width: 768px) {
+    result: var(--tablet);
+  }
+
+  /* Adjust for Mobile */
+  @media (max-width: 480px) {
+    result: var(--mobile);
+  }
+}
+
+body {
+  /* Usage: --responsive(mobile, tablet, desktop)
+  */
+  background-color: --responsive(aqua, orange, red);
+  font-family: --responsive("Segoe UI", "Courier New", "Verdana");
+  font-size: 3rem;
+}
+
+/* For comparison here is the traditional approach which is 18 lines of code. With the function I have created it now only uses 3 lines of code */
+
+/*
+body {
+  background-color: red;
+  font-family: "Verdana";
+  font-size: 10vw;
+}
+
+@media (max-width: 768px) {
+  body {
+    background-color: orange;
+    font-family: "Courier New";
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    background-color: aqua;
+    font-family: "Segoe UI";
+  }
+}
+  */
